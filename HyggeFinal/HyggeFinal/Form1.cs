@@ -26,9 +26,13 @@ namespace HyggeFinal
     }
 // Hej från My
 
+<<<<<<< HEAD
 //Hej fran Karinnnn
 
 //Bajstolle
 
 //Ny test
 
+=======
+//Hej fran Karinnnn
+>>>>>>> parent of 22d6ecd (hej)
