@@ -19,7 +19,8 @@ namespace HyggeFinal
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            // This method is called when the windows form opens
+            var contributor = "vido";
         }
             }
     }
