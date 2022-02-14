@@ -68,6 +68,7 @@
             this.btnLogIn.TabIndex = 2;
             this.btnLogIn.Text = "log in";
             this.btnLogIn.UseVisualStyleBackColor = false;
+            this.btnLogIn.Click += new System.EventHandler(this.btnLogIn_Click);
             // 
             // btnForgotPassword
             // 
