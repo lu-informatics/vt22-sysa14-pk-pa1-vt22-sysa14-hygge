@@ -30,10 +30,10 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtCreatingEmail = new System.Windows.Forms.TextBox();
+            this.txtCreatingProfilePassword = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnCreatingNewProfile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -54,19 +54,19 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Enter a password *";
             // 
-            // textBox1
+            // txtCreatingEmail
             // 
-            this.textBox1.Location = new System.Drawing.Point(181, 112);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(178, 20);
-            this.textBox1.TabIndex = 2;
+            this.txtCreatingEmail.Location = new System.Drawing.Point(181, 112);
+            this.txtCreatingEmail.Name = "txtCreatingEmail";
+            this.txtCreatingEmail.Size = new System.Drawing.Size(178, 20);
+            this.txtCreatingEmail.TabIndex = 2;
             // 
-            // textBox2
+            // txtCreatingProfilePassword
             // 
-            this.textBox2.Location = new System.Drawing.Point(181, 168);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(178, 20);
-            this.textBox2.TabIndex = 3;
+            this.txtCreatingProfilePassword.Location = new System.Drawing.Point(181, 168);
+            this.txtCreatingProfilePassword.Name = "txtCreatingProfilePassword";
+            this.txtCreatingProfilePassword.Size = new System.Drawing.Size(178, 20);
+            this.txtCreatingProfilePassword.TabIndex = 3;
             // 
             // label3
             // 
@@ -78,24 +78,24 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Creating a profile for Hygge";
             // 
-            // button1
+            // btnCreatingNewProfile
             // 
-            this.button1.Location = new System.Drawing.Point(389, 168);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(96, 20);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Create a profile";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnCreatingNewProfile.Location = new System.Drawing.Point(389, 168);
+            this.btnCreatingNewProfile.Name = "btnCreatingNewProfile";
+            this.btnCreatingNewProfile.Size = new System.Drawing.Size(96, 20);
+            this.btnCreatingNewProfile.TabIndex = 5;
+            this.btnCreatingNewProfile.Text = "Create a profile";
+            this.btnCreatingNewProfile.UseVisualStyleBackColor = true;
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(632, 450);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnCreatingNewProfile);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtCreatingProfilePassword);
+            this.Controls.Add(this.txtCreatingEmail);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Form2";
@@ -109,9 +109,9 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtCreatingEmail;
+        private System.Windows.Forms.TextBox txtCreatingProfilePassword;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnCreatingNewProfile;
     }
 }
