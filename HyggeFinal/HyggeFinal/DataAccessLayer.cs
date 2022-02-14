@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 
+
 namespace HyggeFinal
 {
     internal class DataAccessLayer
@@ -20,6 +21,7 @@ namespace HyggeFinal
                 return ("failed to connect.");
             }
         }
-}
+        
+    }
 
 }
