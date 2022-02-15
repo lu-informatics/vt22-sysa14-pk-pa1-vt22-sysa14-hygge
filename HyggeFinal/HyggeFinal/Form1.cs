@@ -28,7 +28,7 @@ namespace HyggeFinal
             // This method is called when the windows form opens
             var contributor = "vido";
 
-            label1.Text = DataAccessLayer.Test();
+            //label1.Text = DataAccessLayer.Test();
         }
 
         private void btnCreateProfile_Click(object sender, EventArgs e)

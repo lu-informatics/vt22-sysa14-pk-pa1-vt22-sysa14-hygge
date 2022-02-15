@@ -34,6 +34,8 @@
             this.txtCreatingProfilePassword = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnCreatingNewProfile = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -67,6 +69,7 @@
             this.txtCreatingProfilePassword.Name = "txtCreatingProfilePassword";
             this.txtCreatingProfilePassword.Size = new System.Drawing.Size(178, 20);
             this.txtCreatingProfilePassword.TabIndex = 3;
+            this.txtCreatingProfilePassword.TextChanged += new System.EventHandler(this.btnCreatingNewProfile1);
             // 
             // label3
             // 
@@ -87,11 +90,30 @@
             this.btnCreatingNewProfile.Text = "Create a profile";
             this.btnCreatingNewProfile.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(284, 324);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(90, 327);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(148, 20);
+            this.textBox1.TabIndex = 7;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(632, 450);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnCreatingNewProfile);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtCreatingProfilePassword);
@@ -100,6 +122,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Form2";
             this.Text = "Form2";
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -113,5 +136,7 @@
         private System.Windows.Forms.TextBox txtCreatingProfilePassword;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnCreatingNewProfile;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

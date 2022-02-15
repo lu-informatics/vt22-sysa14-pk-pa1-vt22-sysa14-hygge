@@ -8,20 +8,35 @@ using System.Data.SqlClient;
 
 namespace HyggeFinal
 {
-    internal class DataAccessLayer
+    public class DataAccessLayer
     {
-        private static SqlConnection cnn = new SqlConnection("Data Source = SYST4DEV01; Initial Catalog = Hygge; User ID=hygge ; Password =hej123 ");
-        
-        public static string Test(){
-        try {
-                cnn.Open();
-                cnn.Close();
-                return ("Successfully connected and closed server.");
-        } catch (SqlException){
-                return ("failed to connect.");
+        private string connectionString = "Server=localhost;Database=Hygge;Intergrated Security = true";
+
+
+
+
+        public SqlDataReader GetPersons()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.CommandText = "SELECT * FROM Person";
+                    command.Connection = connection;
+
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        return reader;
+                    }
+                }
             }
         }
-        
     }
-
 }
+
+        
+            
+    
+
+
