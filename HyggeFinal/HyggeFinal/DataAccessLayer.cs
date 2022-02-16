@@ -1,37 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace HyggeFinal
 {
-    public class DataAccessLayer
-    {
-        private static Dictionary<string, string> queries = new Dictionary<string,string>() {};
-                                                                          /*SERVER NAME: VMKARIN / VMMAJA / SYST4DEV01*/
-        private static SqlConnection cnn = new SqlConnection("Data Source = SYST4DEV01; Initial Catalog = Hygge; User ID=hygge ; Password =hej123 "); // CHECK THIS IF CONNECT FAIL
-        
-        /* update methods can open and close the method in one go, whilst find methods need to send the connection to be closed after saving the value-
-        the reason that we don't handle the conversion inside the method is because it decreases flexibility and modularity; the data access layer should only return datareaders.
-        */
-
-        public static string Test(){
-        try {
-                cnn.Open();
-                cnn.Close();
-                return ("Successfully connected and closed server.");
-        } catch (SqlException){
-                return ("failed to connect.");
-            }
+    public class DataAccessLayer {
+        public static string Test(){ //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.
+            try {
+                DataSet ds = SendToDatabase("SELECT pword FROM Logins WHERE email='anabanana@hotmail.com'");
+                return ds.Tables[0].Rows[0][0].ToString();
+            } catch (SqlException) { return ("failed to connect."); } // returns an error message if the client couldn't connect to the db server (check the data source!)
         }
-
-
-        public static SqlDataReader FetchFromDatabase()
-        {
-            try { return null; } catch (SqlException) { return null; }
+        public static DataSet SendToDatabase(string sqlQuery, params ParamArgs[] args ) {
+            try {
+                using (SqlConnection cnn = new SqlConnection("Data Source = SYST4DEV01; Initial Catalog = Hygge; User ID=hygge ; Password =hej123 ")) {
+                    cnn.Open();
+                    using (SqlCommand command = new SqlCommand(sqlQuery, cnn))
+                    using (SqlDataAdapter adapter = new SqlDataAdapter()) {
+                        if (args != null) { foreach (ParamArgs param in args) command.Parameters.AddWithValue(param.ParamID, param.Value); } // fill each parameter using ParamArgs
+                        string queryType = sqlQuery.Substring(0, 6);                                        //The initial command is separated into a substring
+                        if ( queryType == "UPDATE" || queryType == "DELETE" || queryType == "INSERT" ) {        // if the query writes to the database...
+                            switch (queryType) {// ... the adapter is associated with the proper command and executed.
+                                case "UPDATE":
+                                    adapter.UpdateCommand = command;
+                                    adapter.UpdateCommand.ExecuteNonQuery();
+                                    break;
+                                case "DELETE":
+                                    adapter.DeleteCommand = command;
+                                    adapter.DeleteCommand.ExecuteNonQuery();
+                                    break;
+                                case "INSERT":
+                                    adapter.InsertCommand = command;
+                                    adapter.InsertCommand.ExecuteNonQuery();
+                                    break;
+                            }
+                            return null; // returns null since this code path should only be reached by non-SELECT statements.
+                        }
+                        else {
+                            DataSet dataSet = new DataSet(); // A new DataSet is initialized
+                            adapter.SelectCommand = command;
+                            adapter.Fill(dataSet); // The DataSet is filled with the results from the adapter's command
+                            return dataSet;
+                        }
+                    }
+                }
+            }
+            catch (SqlException) { Console.WriteLine("error"); return null; } // error handling here
         }
     }
-
+    public class ParamArgs { // does this really deserve its own .cs file? is it a crime to keep it like this?
+        public ParamArgs(string paramID, string val) { ParamID = paramID; Value = val; }
+        public string ParamID { get; set; }
+        public string Value { get; set; }
+    }
 }
