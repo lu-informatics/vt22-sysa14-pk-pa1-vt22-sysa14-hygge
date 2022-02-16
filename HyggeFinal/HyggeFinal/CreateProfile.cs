@@ -13,29 +13,37 @@ namespace HyggeFinal
     public partial class CreateProfile : Form
     {
         public static CreateProfile instance;
-        public CreateProfile() 
-           
+        public TextBox tb1;
+        public TextBox tb2;
+
+        public CreateProfile()
+
         {
             InitializeComponent();
             instance = this;
+            tb1 = txtCreateProfileEmail;
+            tb2 = txtCreateProfilePassword;
+
         }
 
         private void btnCreateProfile_Click(object sender, EventArgs e)
         {
-          string email = txtCreateProfileEmail.Text;
-          string password = txtCreateProfilePassword.Text;
-
-            
+            YourProfile yourProfile = new YourProfile();
+            yourProfile.Show();
 
 
-         /*  switch (txtCreateProfileEmail.Text)
-            {
-                case null;
-                case "":
-                    break;
+            //Errorhantering!! 
 
-            }*/
-           
+            /* switch (txtCreateProfileEmail.Text)
+             {
+                 case null;
+                 case "":
+                     break;
+
+             }
+
+         } */
         }
     }
 }
+

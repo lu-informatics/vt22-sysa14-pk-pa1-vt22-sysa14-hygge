@@ -9,12 +9,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HyggeFinal
+
 {
     public partial class YourProfile : Form
     {
+        public static YourProfile instance;
         public YourProfile()
         {
             InitializeComponent();
+            instance = this;
+
         }
     }
 }

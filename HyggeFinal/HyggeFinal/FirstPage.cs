@@ -18,15 +18,23 @@ namespace HyggeFinal
         {
             InitializeComponent();
             instance = this;
-            FirstPage firstPage = new FirstPage();
+          
+
         }
 
         private void btnCreateProfile_Click(object sender, EventArgs e)
         {
             CreateProfile createProfile = new CreateProfile();
             createProfile.Show();
-            firstPage.Close(); //event
 
+           // firstPage.Close(); //event, fixa så vi har en Close-metod till alla
+
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            YourProfile yourProfile = new YourProfile();
+            yourProfile.Show();
         }
     }
 }
