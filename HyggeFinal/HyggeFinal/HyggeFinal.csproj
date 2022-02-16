@@ -46,7 +46,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateProfile.Designer.cs">
+      <DependentUpon>CreateProfile.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataAccessLayer.cs" />
+    <Compile Include="FirstPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FirstPage.Designer.cs">
+      <DependentUpon>FirstPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -55,6 +67,18 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YourProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="YourProfile.Designer.cs">
+      <DependentUpon>YourProfile.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CreateProfile.resx">
+      <DependentUpon>CreateProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FirstPage.resx">
+      <DependentUpon>FirstPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
@@ -67,6 +91,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="YourProfile.resx">
+      <DependentUpon>YourProfile.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
