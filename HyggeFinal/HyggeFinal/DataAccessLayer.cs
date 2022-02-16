@@ -5,9 +5,13 @@ using System.Data;
 namespace HyggeFinal
 {
     public class DataAccessLayer {
+        //Example method that will be called by the GUI controller:
+        public static void AddLogin(string email, string password) => SendToDatabase("INSERT INTO Logins VALUES (@pw,@em)",new ParamArgs("@em",email), new ParamArgs("@pw",password));
+
         public static string Test(){ //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.
             try {
-                DataSet ds = SendToDatabase("SELECT pword FROM Logins WHERE email='anabanana@hotmail.com'");
+                SendToDatabase("INSERT INTO Logins VALUES (@pw,@em)", new ParamArgs("@pw", "plapcom"), new ParamArgs("@em", "plip@plopmail.com"));
+                DataSet ds = SendToDatabase("SELECT pword FROM Logins WHERE email = 'anabanana@hotmail.com'");
                 return ds.Tables[0].Rows[0][0].ToString();
             } catch (SqlException) { return ("failed to connect."); } // returns an error message if the client couldn't connect to the db server (check the data source!)
         }
@@ -49,8 +53,8 @@ namespace HyggeFinal
         }
     }
     public class ParamArgs { // does this really deserve its own .cs file? is it a crime to keep it like this?
-        public ParamArgs(string paramID, string val) { ParamID = paramID; Value = val; }
+        public ParamArgs(string paramID, object val) { ParamID = paramID; Value = val; }
         public string ParamID { get; set; }
-        public string Value { get; set; }
+        public object Value { get; set; }
     }
 }
