@@ -27,7 +27,7 @@ namespace HyggeFinal
             CreateProfile createProfile = new CreateProfile();
             createProfile.Show();
 
-           // firstPage.Close(); //event, fixa så vi har en Close-metod till alla
+           // firstPage.Close(); //event, fixa så vi har en Close-metod till alla - delegate
 
         }
 
