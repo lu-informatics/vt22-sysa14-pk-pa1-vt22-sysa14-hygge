@@ -5,17 +5,50 @@ using System.Data;
 namespace HyggeFinal
 {
     public class DataAccessLayer {
-        //Example method that will be called by the GUI controller:
-        public static void AddLogin(string email, string password) => SendToDatabase("INSERT INTO Logins VALUES (@pw,@em)",new ParamArgs("@em",email), new ParamArgs("@pw",password));
 
-        public static string Test(){ //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.
-            try {
-                SendToDatabase("INSERT INTO Logins VALUES (@pw,@em)", new ParamArgs("@pw", "plapcom"), new ParamArgs("@em", "plip@plopmail.com"));
-                DataSet ds = SendToDatabase("SELECT pword FROM Logins WHERE email = 'anabanana@hotmail.com'");
-                return ds.Tables[0].Rows[0][0].ToString();
-            } catch (SqlException) { return ("failed to connect."); } // returns an error message if the client couldn't connect to the db server (check the data source!)
-        }
-        public static DataSet SendToDatabase(string sqlQuery, params ParamArgs[] args ) {
+        //Create Login
+        public static void CreateLogin(string email, string password) => SendToDatabase("INSERT INTO Logins VALUES (@password,@email)",
+            new ParamArgs("@email",email), 
+            new ParamArgs("@password",password));
+        //Read Login
+        public static DataSet ReadLogin(string email) => SendToDatabase("SELECT * FROM Login WHERE email = @email",
+            new ParamArgs("@email",email));
+        //Delete Login
+        public static void DeleteLogin(string password) => SendToDatabase("DELETE Logins WHERE pword = @password",
+            new ParamArgs("@password", password));
+
+
+        //Create Education
+        public static void CreateEducation(string educationName, string locale) => SendToDatabase("INSERT INTO Education VALUES (@educationName,@locale)", 
+            new ParamArgs("@educationName", educationName),
+            new ParamArgs("@locale",locale));
+        //Read Education
+        public static DataSet ReadEducation(string educationName) => SendToDatabase("SELECT * FROM Education WHERE educationName = @educationName",
+            new ParamArgs("@educationName",educationName));
+        //Delete Education
+        public static void DeleteEducation(string educationName) => SendToDatabase("DELETE Education WHERE educationName = @educationName",
+            new ParamArgs("@educationName", educationName));
+
+
+        //Create Person
+        public static void CreatePerson(
+            string personID, string username, int age, string gender,
+            string email, string relationshipType, string industryName,
+            string educationName, string preference) => SendToDatabase("");
+        //Read Person
+        public static DataSet ReadPerson(string personID) => SendToDatabase("SELECT * FROM Person WHERE personID = @pi",
+            new ParamArgs("@pi",personID));
+
+
+        //public static string Test(){ //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.
+        //    try {
+        //        SendToDatabase("INSERT INTO Logins VALUES (@pw,@em)", new ParamArgs("@pw", "plapcom"), new ParamArgs("@em", "plip@plopmail.com"));
+        //        DataSet ds = SendToDatabase("SELECT pword FROM Logins WHERE email = 'anabanana@hotmail.com'");
+        //        return ds.Tables[0].Rows[0][0].ToString();
+        //    } catch (SqlException) { return ("failed to connect."); } // returns an error message if the client couldn't connect to the db server (check the data source!)
+        //}
+
+        private static DataSet SendToDatabase(string sqlQuery, params ParamArgs[] args ) {
             try {
                 using (SqlConnection cnn = new SqlConnection("Data Source = SYST4DEV01; Initial Catalog = Hygge; User ID=hygge ; Password =hej123 ")) { //SQL Connection
                     cnn.Open();
