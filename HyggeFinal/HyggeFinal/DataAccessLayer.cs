@@ -17,7 +17,7 @@ namespace HyggeFinal
         }
         public static DataSet SendToDatabase(string sqlQuery, params ParamArgs[] args ) {
             try {
-                using (SqlConnection cnn = new SqlConnection("Data Source = SYST4DEV01; Initial Catalog = Hygge; User ID=hygge ; Password =hej123 ")) {
+                using (SqlConnection cnn = new SqlConnection("Data Source = SYST4DEV01; Initial Catalog = Hygge; User ID=hygge ; Password =hej123 ")) { //SQL Connection
                     cnn.Open();
                     using (SqlCommand command = new SqlCommand(sqlQuery, cnn))
                     using (SqlDataAdapter adapter = new SqlDataAdapter()) {
@@ -26,8 +26,8 @@ namespace HyggeFinal
                         if ( queryType == "UPDATE" || queryType == "DELETE" || queryType == "INSERT" ) {        // if the query writes to the database...
                             switch (queryType) {// ... the adapter is associated with the proper command and executed.
                                 case "UPDATE":
-                                    adapter.UpdateCommand = command;
-                                    adapter.UpdateCommand.ExecuteNonQuery();
+                                    adapter.UpdateCommand = command; //association
+                                    adapter.UpdateCommand.ExecuteNonQuery(); //execution
                                     break;
                                 case "DELETE":
                                     adapter.DeleteCommand = command;
@@ -53,8 +53,8 @@ namespace HyggeFinal
         }
     }
     public class ParamArgs { // does this really deserve its own .cs file? is it a crime to keep it like this?
-        public ParamArgs(string paramID, object val) { ParamID = paramID; Value = val; }
-        public string ParamID { get; set; }
-        public object Value { get; set; }
+        public ParamArgs(string paramID, object val) { ParamID = paramID; Value = val; } //constructor
+        public string ParamID { get; set; } //ParamID property
+        public object Value { get; set; } //Value property
     }
 }
