@@ -6,6 +6,15 @@ using System.Collections.Generic;
 namespace HyggeFinal
 {
     public class DataAccessLayer {
+        /*
+         
+         TODO:
+                create-person-method
+                error-handling
+         
+         */
+
+
 
         public static string Test()
         { //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.
@@ -80,7 +89,7 @@ namespace HyggeFinal
         }
 
         public static class Person {
-            //Create Person (should only create necessary data and the use update to add nonessentials)
+            //Create Person (should only create necessary data and the use update to add nonessentials)       // TODO: CREATE PERSON METHOD
             //public static void CreatePerson(
 
             //Update
