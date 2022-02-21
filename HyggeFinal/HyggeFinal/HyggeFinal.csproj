@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminAccess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdminAccess.Designer.cs">
+      <DependentUpon>AdminAccess.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateProfile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +80,9 @@
     <Compile Include="YourProfile.Designer.cs">
       <DependentUpon>YourProfile.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AdminAccess.resx">
+      <DependentUpon>AdminAccess.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CreateProfile.resx">
       <DependentUpon>CreateProfile.cs</DependentUpon>
     </EmbeddedResource>
