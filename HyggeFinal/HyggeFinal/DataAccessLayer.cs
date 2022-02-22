@@ -3,23 +3,29 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Collections.Generic;
 
-namespace HyggeFinal
-{
-    public class DataAccessLayer {
-        //TODO: error-handling
-
-        public static string Test() { //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.
-            try
-            {
+namespace HyggeFinal {
+    public class DataAccessLayer { //TODO error handling
+        public static string Test() { //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.   
+            try {
                 DataSet ds = Login.ReadLogin("anabanana@hotmail.com");
                 return ds.Tables[0].Rows[0][0].ToString(); // returns the value of the first column of the first row in string format
             }
             catch (SqlException) { return ("failed to connect."); } // returns a simple error message if the client couldn't connect to the db server (check the data source!)
         }
-        public enum Table { Logins, Person, Relationship, Interest, Industry, Education } // Enumeration of allowed Tables
+        public enum Table { // Enumeration of allowed Tables
+            Logins, 
+            Person, 
+            Relationship, 
+            Interest, 
+            Industry, 
+            Education 
+        }
 
-        private static class Utils { //These methods partially define the SQL query, leaving parameter fill for the SendToDatabes method.
-            // IMPORTANT: These methods requires ParamIDs to match parameter names in the database!
+        private static class Utils {
+            // These methods partially define the SQL query, leaving parameter fill for the SendToDatabes method.
+            // IMPORTANT: These methods requires ParamIDs to match parameter names in the database.
+
+            public static DataSet ViewAll(Table table) => SendToDatabase($"SELECT * FROM {table}");
 
             //CREATE TEMPLATE
             public static void Create(Table table, ParamArgs value1, ParamArgs value2) 
@@ -45,7 +51,7 @@ namespace HyggeFinal
             //Read
             public static DataSet ReadLogin(string email) => Utils.Read(Table.Logins, new ParamArgs("@email", email));
             //Delete
-            public static void DeleteLogin(string password) => Utils.Delete(Table.Logins,new ParamArgs("@pword",password));
+            public static void DeleteLogin(string email) => Utils.Delete(Table.Logins,new ParamArgs("@email",email));
         }
 
         public static class Industry {
