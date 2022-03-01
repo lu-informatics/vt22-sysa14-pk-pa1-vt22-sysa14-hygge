@@ -21,7 +21,7 @@ namespace HyggeFinal {
             Education 
         }
 
-        private static class Utils {
+        public static class Utils {
             // These methods partially define the SQL query, leaving parameter fill for the SendToDatabes method.
             // IMPORTANT: These methods requires ParamIDs to match parameter names in the database.
 
@@ -76,8 +76,7 @@ namespace HyggeFinal {
             public static void DeleteEducation(string educationName) => Utils.Delete(Table.Education,new ParamArgs("@educationName",educationName));
         }
 
-        public static class Person {
-            //Create Person (should only create necessary data and use the update method to add nonessentials)       // TODO: CREATE PERSON METHOD
+        public static class Person { 
             public static void CreatePerson(string personID, string name, int age, string gender, string preference)
                 => SendToDatabase(
                     "INSERT INTO Person(personID,name,age,gender,preference) VALUES (@personID,@name,@age,@gender,@preference)",
