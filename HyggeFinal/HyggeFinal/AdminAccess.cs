@@ -13,30 +13,29 @@ namespace HyggeFinal
     public partial class AdminAccess : Form
     {
         private TextBox[] inputFields;
+        private Label[] inputLabels;
         public AdminAccess()
         {
             InitializeComponent();
         }
-
         private void AdminAccess_Load(object sender, EventArgs e)
         {
-            inputFields = new TextBox[] { textBox1,textBox2,textBox3,textBox4,textBox5,textBoxSearchIdentifier };
+            inputFields = new TextBox[] { textBox1,textBox2,textBox3,textBox4,textBox5 };
+            inputLabels = new Label[] { label1, label2, label3, label4, label5 };
             //this form will be used for the demonstration of CURD
         }
-
-        private void DisableAllInputFields() {
-            foreach(TextBox tbx in inputFields) tbx.Enabled = false;
-        }
-
-        private void EnableInputFields() {
-            for (int i = 0; i < dgvTable.Columns.Count; i++) inputFields[i].Enabled = true;
+        private void DisableAndClearAllInputFields() {
+            textBoxSearchIdentifier.Text = "";
+            foreach (TextBox tbx in inputFields) { tbx.Text=""; tbx.Enabled = false; }
+            foreach (Label lbl in inputLabels) lbl.Text = "";
         }
 
         //Clicking a Menu item changes the datasource used for the DataGridView dgvTable
         private void ChangeDataSource(DataAccessLayer.Table chosenTable) {
-            DisableAllInputFields();
-            dgvTable.DataSource = DataAccessLayer.Utils.ViewAll(chosenTable); //datasource change
+            DisableAndClearAllInputFields();
+            dgvTable.DataSource = DataAccessLayer.Utils.ViewAll(chosenTable).Tables[0]; //datasource change
             lblTable.Text = chosenTable.ToString();
+            lblSearch.Text = $"Search in {chosenTable}";
         }
         private void LoginsToolStripMenuItem_Click(object sender, EventArgs e) => ChangeDataSource(DataAccessLayer.Table.Logins);
         private void PersonsToolStripMenuItem_Click(object sender, EventArgs e) => ChangeDataSource(DataAccessLayer.Table.Person);
@@ -73,7 +72,8 @@ namespace HyggeFinal
         private void FillInputFields(DataSet ds) {
             for (int i = 0; i < ds.Tables[0].Columns.Count;i++) {
                 inputFields[i].Enabled = true; // enable the inputfield
-                inputFields[i].Text = ds.Tables[0].Rows[0][0].ToString(); //fill the inputfield with data from the search
+                inputFields[i].Text = ds.Tables[0].Rows[0][i].ToString(); //fill the inputfield with data from the search
+                inputLabels[i].Text = ds.Tables[0].Columns[i].ToString();
             }
         }
     }

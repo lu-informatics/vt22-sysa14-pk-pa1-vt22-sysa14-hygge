@@ -58,12 +58,16 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblSelected = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.textBoxSearchIdentifier = new System.Windows.Forms.TextBox();
             this.searchButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.lblSearch = new System.Windows.Forms.Label();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnCreate = new System.Windows.Forms.Button();
+            this.btnClearSelection = new System.Windows.Forms.Button();
+            this.lblErrorMessage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTable)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -72,6 +76,7 @@
             // 
             this.dgvTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTable.Location = new System.Drawing.Point(12, 64);
+            this.dgvTable.MultiSelect = false;
             this.dgvTable.Name = "dgvTable";
             this.dgvTable.Size = new System.Drawing.Size(393, 374);
             this.dgvTable.TabIndex = 0;
@@ -118,7 +123,7 @@
             this.industryToolStripMenuItem,
             this.educationToolStripMenuItem});
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createToolStripMenuItem.Text = "Create";
             // 
             // loginToolStripMenuItem
@@ -179,42 +184,42 @@
             // loginsToolStripMenuItem
             // 
             this.loginsToolStripMenuItem.Name = "loginsToolStripMenuItem";
-            this.loginsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.loginsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loginsToolStripMenuItem.Text = "Logins";
             this.loginsToolStripMenuItem.Click += new System.EventHandler(this.LoginsToolStripMenuItem_Click);
             // 
             // personsToolStripMenuItem
             // 
             this.personsToolStripMenuItem.Name = "personsToolStripMenuItem";
-            this.personsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.personsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.personsToolStripMenuItem.Text = "Persons";
             this.personsToolStripMenuItem.Click += new System.EventHandler(this.PersonsToolStripMenuItem_Click);
             // 
             // relationshipsToolStripMenuItem
             // 
             this.relationshipsToolStripMenuItem.Name = "relationshipsToolStripMenuItem";
-            this.relationshipsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.relationshipsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.relationshipsToolStripMenuItem.Text = "Relationships";
             this.relationshipsToolStripMenuItem.Click += new System.EventHandler(this.RelationshipsToolStripMenuItem_Click);
             // 
             // industriesToolStripMenuItem
             // 
             this.industriesToolStripMenuItem.Name = "industriesToolStripMenuItem";
-            this.industriesToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.industriesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.industriesToolStripMenuItem.Text = "Industries";
             this.industriesToolStripMenuItem.Click += new System.EventHandler(this.IndustriesToolStripMenuItem_Click);
             // 
             // educationsToolStripMenuItem
             // 
             this.educationsToolStripMenuItem.Name = "educationsToolStripMenuItem";
-            this.educationsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.educationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.educationsToolStripMenuItem.Text = "Educations";
             this.educationsToolStripMenuItem.Click += new System.EventHandler(this.EducationsToolStripMenuItem_Click);
             // 
             // interestsToolStripMenuItem
             // 
             this.interestsToolStripMenuItem.Name = "interestsToolStripMenuItem";
-            this.interestsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.interestsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.interestsToolStripMenuItem.Text = "Interests";
             this.interestsToolStripMenuItem.Click += new System.EventHandler(this.InterestsToolStripMenuItem_Click);
             // 
@@ -228,35 +233,35 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(494, 232);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(201, 20);
+            this.textBox1.Size = new System.Drawing.Size(294, 20);
             this.textBox1.TabIndex = 3;
             // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(494, 258);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(201, 20);
+            this.textBox2.Size = new System.Drawing.Size(294, 20);
             this.textBox2.TabIndex = 4;
             // 
             // textBox3
             // 
             this.textBox3.Location = new System.Drawing.Point(494, 284);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(201, 20);
+            this.textBox3.Size = new System.Drawing.Size(294, 20);
             this.textBox3.TabIndex = 5;
             // 
             // textBox4
             // 
             this.textBox4.Location = new System.Drawing.Point(494, 310);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(201, 20);
+            this.textBox4.Size = new System.Drawing.Size(294, 20);
             this.textBox4.TabIndex = 6;
             // 
             // textBox5
             // 
             this.textBox5.Location = new System.Drawing.Point(494, 336);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(201, 20);
+            this.textBox5.Size = new System.Drawing.Size(294, 20);
             this.textBox5.TabIndex = 7;
             // 
             // label1
@@ -304,36 +309,36 @@
             this.label5.TabIndex = 12;
             this.label5.Text = "label5";
             // 
-            // label6
+            // lblSelected
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(411, 196);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(84, 24);
-            this.label6.TabIndex = 18;
-            this.label6.Text = "Selected";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblSelected.AutoSize = true;
+            this.lblSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelected.Location = new System.Drawing.Point(411, 196);
+            this.lblSelected.Name = "lblSelected";
+            this.lblSelected.Size = new System.Drawing.Size(127, 24);
+            this.lblSelected.TabIndex = 18;
+            this.lblSelected.Text = "Selected Row";
+            this.lblSelected.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(567, 363);
+            this.button1.Location = new System.Drawing.Point(568, 362);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(127, 23);
             this.button1.TabIndex = 19;
             this.button1.Text = "Save Changes";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // textBoxIdentifier
+            // textBoxSearchIdentifier
             // 
             this.textBoxSearchIdentifier.Location = new System.Drawing.Point(494, 145);
-            this.textBoxSearchIdentifier.Name = "textBoxIdentifier";
-            this.textBoxSearchIdentifier.Size = new System.Drawing.Size(133, 20);
+            this.textBoxSearchIdentifier.Name = "textBoxSearchIdentifier";
+            this.textBoxSearchIdentifier.Size = new System.Drawing.Size(213, 20);
             this.textBoxSearchIdentifier.TabIndex = 20;
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(633, 145);
+            this.searchButton.Location = new System.Drawing.Point(713, 143);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(75, 23);
             this.searchButton.TabIndex = 21;
@@ -350,28 +355,68 @@
             this.label7.TabIndex = 22;
             this.label7.Text = "ID";
             // 
-            // label8
+            // lblSearch
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(411, 111);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(143, 24);
-            this.label8.TabIndex = 23;
-            this.label8.Text = "Search in Table";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblSearch.AutoSize = true;
+            this.lblSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSearch.Location = new System.Drawing.Point(411, 111);
+            this.lblSearch.Name = "lblSearch";
+            this.lblSearch.Size = new System.Drawing.Size(143, 24);
+            this.lblSearch.TabIndex = 23;
+            this.lblSearch.Text = "Search in Table";
+            this.lblSearch.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(713, 415);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.TabIndex = 24;
+            this.btnDelete.Text = "Delete Row";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            // 
+            // btnCreate
+            // 
+            this.btnCreate.Location = new System.Drawing.Point(713, 362);
+            this.btnCreate.Name = "btnCreate";
+            this.btnCreate.Size = new System.Drawing.Size(75, 23);
+            this.btnCreate.TabIndex = 25;
+            this.btnCreate.Text = "Create New";
+            this.btnCreate.UseVisualStyleBackColor = true;
+            // 
+            // btnClearSelection
+            // 
+            this.btnClearSelection.Location = new System.Drawing.Point(692, 199);
+            this.btnClearSelection.Name = "btnClearSelection";
+            this.btnClearSelection.Size = new System.Drawing.Size(96, 23);
+            this.btnClearSelection.TabIndex = 26;
+            this.btnClearSelection.Text = "Clear Selection";
+            this.btnClearSelection.UseVisualStyleBackColor = true;
+            // 
+            // lblErrorMessage
+            // 
+            this.lblErrorMessage.AutoSize = true;
+            this.lblErrorMessage.Location = new System.Drawing.Point(491, 388);
+            this.lblErrorMessage.Name = "lblErrorMessage";
+            this.lblErrorMessage.Size = new System.Drawing.Size(74, 13);
+            this.lblErrorMessage.TabIndex = 27;
+            this.lblErrorMessage.Text = "Error message";
             // 
             // AdminAccess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label8);
+            this.Controls.Add(this.lblErrorMessage);
+            this.Controls.Add(this.btnClearSelection);
+            this.Controls.Add(this.btnCreate);
+            this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.lblSearch);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.searchButton);
             this.Controls.Add(this.textBoxSearchIdentifier);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.lblSelected);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -429,11 +474,15 @@
         private System.Windows.Forms.ToolStripMenuItem industriesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem educationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem interestsToolStripMenuItem;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblSelected;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBoxSearchIdentifier;
         private System.Windows.Forms.Button searchButton;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblSearch;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnCreate;
+        private System.Windows.Forms.Button btnClearSelection;
+        private System.Windows.Forms.Label lblErrorMessage;
     }
 }
