@@ -12,13 +12,14 @@ namespace HyggeFinal {
             }
             catch (SqlException) { return ("failed to connect."); } // returns a simple error message if the client couldn't connect to the db server (check the data source!)
         }
-        public enum Table { // Enumeration of allowed Tables
+        public enum Table { // Enumeration of valid Tables
             Logins, 
             Person, 
             Relationship, 
             Interest, 
             Industry, 
-            Education 
+            Education,
+            Error
         }
 
         public static class Utils {
@@ -77,12 +78,20 @@ namespace HyggeFinal {
         }
 
         public static class Person { 
-            public static void CreatePerson(string personID, string name, int age, string gender, string preference)
+            public static void CreatePerson(
+                string personID, string username, int age, string gender, 
+                string email, string relationshipType, string industryName, 
+                string educationName, string preference)
                 => SendToDatabase(
-                    "INSERT INTO Person(personID,name,age,gender,preference) VALUES (@personID,@name,@age,@gender,@preference)",
+                    "INSERT INTO Person(personID,username,age,gender,preference,email,relationshipType,educationName,industryName) " +
+                    "VALUES (@personID,@username,@age,@gender,@preference,@email,@relationshipType,@educationName,@industryName)",
                     new ParamArgs("@personID",personID),
-                    new ParamArgs("@name",name),
+                    new ParamArgs("@email",email),
+                    new ParamArgs("@username",username),
                     new ParamArgs("@age",age),
+                    new ParamArgs("@educationName",educationName),
+                    new ParamArgs("@industryName",industryName),
+                    new ParamArgs("@relationshipType",relationshipType),
                     new ParamArgs("@gender",gender),
                     new ParamArgs("@preference",preference));
             //Update
