@@ -23,6 +23,7 @@ namespace HyggeFinal
 
         private void AdminAccess_Load(object sender, EventArgs e)
         {
+            DataAccessLayer.onSqlError += new DataAccessLayer.errorHandler(DisplayErrorMessage);
             //some configuration for visual appeal
             dgvTable.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTable.ColumnHeadersDefaultCellStyle.BackColor = Color.DarkSlateGray;
@@ -132,8 +133,6 @@ namespace HyggeFinal
 
             }
         }
-
-
         private void SaveButton_Click(object sender, EventArgs e) //Update values for entry with a primary key matching that of inputFields[0]
         {
             if (FindTable().Equals(DataAccessLayer.Table.EducationIndustry) || FindTable().Equals(DataAccessLayer.Table.PersonInterest))
@@ -173,8 +172,6 @@ namespace HyggeFinal
                 UpdateDataSource(FindTable());
                 GoToRowOf(key);
             }
-
-
         }
 
         private void BtnCreate_Click(object sender, EventArgs e) //Create a new row with user input provided in inputFields
@@ -271,34 +268,9 @@ namespace HyggeFinal
             ChangeDataSource(FindTable());
         }
 
-        private void DisplayErrorMessage(Exception ex)
+        private void DisplayErrorMessage(string message)
         {
-            string message;
-            if (ex is SqlException)
-            {
-                SqlException se = ex as SqlException;
-                switch (se.Number)
-                {
-                    case -2: //connection timed out
-                        break;
-                    case 208: //invalid object name (no table selected when searching/clearing selection)
-                        break;
-                    case 8178: //expected a parameter that was not supplied, or an int was too long
-                        break;
-                    case 245: //conversion error from string to int
-                        break;
-                    case 547: //foreign key violation: no such foreign key
-                        break;
-                    case 2628: //string too long
-                        break;
-                    case 2627: //primary key violation
-                        break;
-                }
-            }
-            else if (ex is IndexOutOfRangeException) //likely a search for a value that doesnt exist, or a search thru the normal bar when in many2many
-            {
-
-            }
+            Console.WriteLine(message);
         }
     }
 }

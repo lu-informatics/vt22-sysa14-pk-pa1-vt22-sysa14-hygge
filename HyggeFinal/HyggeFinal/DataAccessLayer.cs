@@ -7,6 +7,8 @@ namespace HyggeFinal
 {
     public class DataAccessLayer
     { //TODO error handling
+        public delegate void errorHandler(string message);
+        public static errorHandler onSqlError;
         public static string Test()
         { //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.   
             try
@@ -214,7 +216,42 @@ namespace HyggeFinal
                     }
                 }
             }
-            catch (SqlException e) { Console.WriteLine(e.Number+": "+e.Message); throw e; } // error handling here
+            catch (SqlException e) {
+                string message = "";
+                switch (e.Number)
+                {
+                    case -2: //connection timed out
+                        message = "Connection timed out. Please Check your connection and try again later.";
+                        break;
+                    case 208: //invalid object name (no table selected when searching/clearing selection)
+                        message = "An error occurred. Please select a table in the 'View' menu and try again.";
+                        break;
+                    case 8178: //expected a parameter that was not supplied, or an int was too long - trying to create with empty table
+                        message = "An error has occurred. Please make sure that all fields are filled in correctly.";
+                        break;
+                    case 245: //conversion error from string to int
+                        message = "An error has occured. Please make sure that lvlOfCommitment/age is an appropriate number.";
+                        break;
+                    case 547: //foreign key violation: no such foreign key
+                        message = "Error: Education, Industry, Interest and Relationship fields must use an existing entry. Add them first and try again.";
+                        break;
+                    case 2628: //string too long
+                        message = "Error: Please make sure that all fields are appropriately sized.";
+                        break;
+                    case 2627: //primary key violation
+                        message = "Error: There already exists an entry with that identifier.";
+                        break;
+                    case 18456: //login failed for database
+                        message = "Error: Login failed.";
+                        break;
+                    case 67: //network name could not be found
+                        message = "Error: The Network could not be found!";
+                        break;
+                }
+
+                onSqlError?.Invoke(message);
+                return null;
+            } // error handling here
         }
     }
 }
