@@ -48,16 +48,19 @@ namespace HyggeFinal
         {
             tableIsReady = false; //tableIsReady is set to false to prevent premature trigger of selectionChanged-event. It is set to true in cellclick- and keydown-events below 
             DataSet ds = DataAccessLayer.Utils.ViewAll(chosenTable);
-            dgvTable.DataSource = ds.Tables[0]; //datasource change
-            lblTable.Text = chosenTable.ToString();
-            lblSearch.Text = $"Search in {chosenTable}";
-            for (int i = 0; i < dgvTable.Columns.Count; i++)
-            {
-                inputFields[i].Enabled = true;
-                inputLabels[i].Text = ds.Tables[0].Columns[i].ToString();
+            if (ds != null) {
+                dgvTable.DataSource = ds.Tables[0]; //datasource change
+                lblTable.Text = chosenTable.ToString();
+                lblSearch.Text = $"Search in {chosenTable}";
+                for (int i = 0; i < dgvTable.Columns.Count; i++)
+                {
+                    inputFields[i].Enabled = true;
+                    inputLabels[i].Text = ds.Tables[0].Columns[i].ToString();
+                }
+                lblIdentifier.Text = $"{inputLabels[0].Text}";
             }
-            lblIdentifier.Text = $"{inputLabels[0].Text}";
         }
+
         //Clicking a Menu item changes the datasource used for the DataGridView dgvTable
         private void ChangeDataSource(DataAccessLayer.Table chosenTable)
         {
@@ -103,8 +106,8 @@ namespace HyggeFinal
                 DataAccessLayer.Utils.Read(FindTable(),
                     new ParamArgs($"@{inputLabels[0].Text}", TrueDataType(inputFields[0].Text)),
                     new ParamArgs($"@{inputLabels[1].Text}", TrueDataType(inputFields[1].Text)));
-                string primaryKey1 = inputLabels[0].Text;
-                string primaryKey2 = inputLabels[1].Text;
+                string primaryKey1 = inputFields[0].Text;
+                string primaryKey2 = inputFields[1].Text;
                 FillInputFields(DataAccessLayer.Utils.Read(FindTable(), new ParamArgs($"@{inputLabels[0].Text}", primaryKey1), new ParamArgs($"@{inputLabels[1].Text}", primaryKey2)));
                 GoToRowOf(primaryKey1, primaryKey2);
 
@@ -120,18 +123,14 @@ namespace HyggeFinal
         }
         private void FillInputFields(DataSet ds)
         {
-            try
+            if (ds!=null && ds.Tables[0].Rows.Count>0)
             {
                 for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
                 {
                     inputFields[i].Text = ds.Tables[0].Rows[0][i].ToString(); //fill the inputfield with data from the search
                     inputLabels[i].Text = ds.Tables[0].Columns[i].ToString();
                 }
-            }
-            catch (Exception ex)
-            {
-
-            }
+            }else { }//nothing found via DisplayErrorMessage();
         }
         private void SaveButton_Click(object sender, EventArgs e) //Update values for entry with a primary key matching that of inputFields[0]
         {
@@ -163,7 +162,7 @@ namespace HyggeFinal
                                 new ParamArgs($"@pk_{dgvTable.Columns[0].Name}", TrueDataType(dgvTable.SelectedRows[0].Cells[0].Value.ToString())),
                                 new ParamArgs($"@{inputLabels[i].Text}", TrueDataType(inputFields[i].Text)));
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             //Index out of range: when you havent selected a table
                         }
@@ -176,26 +175,26 @@ namespace HyggeFinal
 
         private void BtnCreate_Click(object sender, EventArgs e) //Create a new row with user input provided in inputFields
         {
-            if (FindTable() == DataAccessLayer.Table.Person)
-            {
+            if (FindTable().Equals(DataAccessLayer.Table.Person) && IsFilledOut())
+            try{
                 DataAccessLayer.Person.CreatePerson(
                     inputFields[0].Text,
                     inputFields[1].Text,
-                    Int32.Parse(inputFields[2].Text), //error handling required here 
+                    int.Parse(inputFields[2].Text), //error handling required here 
                     inputFields[3].Text,
                     inputFields[4].Text,
                     inputFields[5].Text,
                     inputFields[6].Text,
                     inputFields[7].Text,
                     inputFields[8].Text);
-            }
+                }
+                catch (FormatException) { }//when age is not filled in right
             else DataAccessLayer.Utils.Create(FindTable(),
                 new ParamArgs($"@{inputLabels[0].Text}", TrueDataType(inputFields[0].Text)),
                 new ParamArgs($"@{inputLabels[1].Text}", TrueDataType(inputFields[1].Text)));
             string primaryKey = inputFields[0].Text;
             UpdateDataSource(FindTable()); //updates the table display
             GoToRowOf(primaryKey);
-
         }
         private DataAccessLayer.Table FindTable()
         {
@@ -212,28 +211,32 @@ namespace HyggeFinal
             }
         }
         private void BtnDelete_Click(object sender, EventArgs e) // Delete a Row using primary key in inputFields[0]
-        {
-            if (FindTable().Equals(DataAccessLayer.Table.EducationIndustry) || FindTable().Equals(DataAccessLayer.Table.PersonInterest))
+        {   if (dgvTable!=null && dgvTable.Columns.Count > 0)
             {
-                DataAccessLayer.Utils.Delete(FindTable(),
-                    new ParamArgs($"@{dgvTable.Columns[0].Name}", TrueDataType(inputFields[0].Text)),
-                    new ParamArgs($"@{dgvTable.Columns[1].Name}", TrueDataType(inputFields[1].Text)));
-                ChangeDataSource(FindTable());
-            }
-            else
-            {
-                DataAccessLayer.Utils.Delete(FindTable(), new ParamArgs($"@{dgvTable.Columns[0].Name}", TrueDataType(inputFields[0].Text)));
-                ChangeDataSource(FindTable());
-            }
+                if (FindTable().Equals(DataAccessLayer.Table.EducationIndustry) || FindTable().Equals(DataAccessLayer.Table.PersonInterest))
+                {
+                    DataAccessLayer.Utils.Delete(FindTable(),
+                        new ParamArgs($"@{dgvTable.Columns[0].Name}", TrueDataType(inputFields[0].Text)),
+                        new ParamArgs($"@{dgvTable.Columns[1].Name}", TrueDataType(inputFields[1].Text)));
+                    ChangeDataSource(FindTable());
+                }
+                else
+                {
+                    DataAccessLayer.Utils.Delete(FindTable(), new ParamArgs($"@{dgvTable.Columns[0].Name}", TrueDataType(inputFields[0].Text)));
+                    ChangeDataSource(FindTable());
+                }
+            }else { } //TODO: call DisplayErrorMessage() and explain that a table needs to be selected.
         }
         private object TrueDataType(string str)
-        {try
+        {
+            try
             { //converts input string into either sql ready string with '' or into integer
-                if (str.All(Char.IsDigit)) return long.Parse(str);
+                if (str.All(char.IsDigit)) return long.Parse(str);
                 else return str;
-            }catch(Exception ex) { return null; }//leaving input strings empty when trying to create new
+            }
+            catch (Exception ex) { return null; }//leaving input strings empty when trying to create new
         }
-        
+
         private void DgvTable_SelectionChanged(object sender, EventArgs e)
         { // Fills user input fields with data respective to table selection
             if (sender is DataGridView dgv && dgv.SelectedRows.Count > 0 && tableIsReady)
@@ -262,6 +265,14 @@ namespace HyggeFinal
         {
             tableIsReady = true; DgvTable_SelectionChanged(dgvTable, EventArgs.Empty);
         }
+        private bool IsFilledOut()
+        {
+            foreach(TextBox inputField in inputFields)
+            {
+                if (inputField.Text.Equals("")) return false;
+            }
+            return true;
+        }
 
         private void BtnClearSelection_Click(object sender, EventArgs e)
         {
@@ -272,5 +283,6 @@ namespace HyggeFinal
         {
             Console.WriteLine(message);
         }
+
     }
 }
