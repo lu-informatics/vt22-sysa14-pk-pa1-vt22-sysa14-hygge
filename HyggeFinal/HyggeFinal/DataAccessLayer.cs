@@ -247,6 +247,9 @@ namespace HyggeFinal
                     case 67: //network name could not be found
                         message = "Error: The Network could not be found!";
                         break;
+                    default:
+                        message = "Error";
+                        break;
                 }
                 onSqlError?.Invoke(message);
                 return null;

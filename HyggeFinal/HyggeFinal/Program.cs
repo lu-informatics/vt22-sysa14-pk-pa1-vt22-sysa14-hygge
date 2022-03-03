@@ -16,7 +16,7 @@ namespace HyggeFinal
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AdminAccess());
+            Application.Run(new AdminAccess()); // load new AdminAccess form
         }
     }
 }
