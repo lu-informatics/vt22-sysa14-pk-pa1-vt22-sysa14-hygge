@@ -177,8 +177,6 @@ namespace HyggeFinal
         private void BtnCreate_Click(object sender, EventArgs e) //Create a new row with user input provided in inputFields
         {
             if (FindTable().Equals(DataAccessLayer.Table.Person) && IsFilledOut()) //if the Person table is being viewed and all input fields are filled out.
-                try
-                {
                     DataAccessLayer.Person.CreatePerson(
                         inputFields[0].Text,
                         inputFields[1].Text,
@@ -189,8 +187,6 @@ namespace HyggeFinal
                         inputFields[6].Text,
                         inputFields[7].Text,
                         inputFields[8].Text);
-                }
-                catch (FormatException) { }//when age is not filled in right
             else DataAccessLayer.Utils.Create(FindTable(),
                 new ParamArgs($"@{inputLabels[0].Text}", TrueDataType(inputFields[0].Text)),
                 new ParamArgs($"@{inputLabels[1].Text}", TrueDataType(inputFields[1].Text)));
@@ -214,16 +210,16 @@ namespace HyggeFinal
         }
         private void BtnDelete_Click(object sender, EventArgs e) // Delete a Row using primary key in inputFields[0]
         {
-            if (dgvTable != null && dgvTable.Columns.Count > 0)
+            if (dgvTable != null && dgvTable.Columns.Count > 0) //if there is a dgv that is populated with at least column headers; has a table been selected?
             {
-                if (FindTable().Equals(DataAccessLayer.Table.EducationIndustry) || FindTable().Equals(DataAccessLayer.Table.PersonInterest))
-                {
+                if (FindTable().Equals(DataAccessLayer.Table.EducationIndustry) || FindTable().Equals(DataAccessLayer.Table.PersonInterest)) //if it is a many-to-many entry...
+                {//... do as follows:
                     DataAccessLayer.Utils.Delete(FindTable(),
                         new ParamArgs($"@{dgvTable.Columns[0].Name}", TrueDataType(inputFields[0].Text)),
                         new ParamArgs($"@{dgvTable.Columns[1].Name}", TrueDataType(inputFields[1].Text)));
                     ChangeDataSource(FindTable());
                 }
-                else
+                else //the primary key is comprised of a single column
                 {
                     DataAccessLayer.Utils.Delete(FindTable(), new ParamArgs($"@{dgvTable.Columns[0].Name}", TrueDataType(inputFields[0].Text)));
                     ChangeDataSource(FindTable());
@@ -231,30 +227,31 @@ namespace HyggeFinal
             }
             else DisplayErrorMessage("Error: No table selected. Select a table in the 'View' menu and try again.");
         }
-        private object TrueDataType(string str)
+        private object TrueDataType(string str) //simple method for determining the proper datatype of a value input in the input fields
         {
             try
             { //converts input string into either sql ready string with '' or into integer
                 if (str.All(char.IsDigit)) return long.Parse(str);
                 else return str;
             }
-            catch (Exception ex) { return null; }//leaving input strings empty when trying to create new
+            catch (Exception) { return null; }//leaving input strings empty when trying to create new. error feedback is handled by delegate cast, so no need to handle it further here.
         }
 
-        private void DgvTable_SelectionChanged(object sender, EventArgs e)
+        private void DgvTable_SelectionChanged(object sender, EventArgs e) // Triggers whenever the row selection in the DataGridView changes
         { // Fills user input fields with data respective to table selection
-            if (sender is DataGridView dgv && dgv.SelectedRows.Count > 0 && tableIsReady)
+            if (sender is DataGridView dgv && dgv.SelectedRows.Count > 0 && tableIsReady) //tableIsReady makes sure that the table wasn't just recently loaded
             {
-                DataGridViewRow row = dgv.SelectedRows[0];
+                DataGridViewRow row = dgv.SelectedRows[0]; //store the selected row in a DataGridViewRow variable
                 if (row != null)
                 {
-                    string colname = row.Cells[0].OwningColumn.Name.ToString();
+                    string colname = row.Cells[0].OwningColumn.Name.ToString(); //get the name of the primary key column
+                    //fill input fields with new selection:
                     FillInputFields(DataAccessLayer.Utils.Read(FindTable(), new ParamArgs($"@{colname}", TrueDataType(row.Cells[0].Value.ToString()))));
                 }
             }
         }
         private void DgvTable_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        { // asserts that the arrowkeys should be recognised for the dgvTable_KeyDown event
+        { // asserts that the arrowkeys should be recognised for the dgvTable_KeyDown event. This method is called right before the KeyDown event.
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -263,13 +260,13 @@ namespace HyggeFinal
                     break;
             }
         }
-        private void DgvTable_KeyDown(object sender, KeyEventArgs e) => AssertTableReadiness();
-        private void DgvTable_CellClick(object sender, DataGridViewCellEventArgs e) => AssertTableReadiness();
-        private void AssertTableReadiness()
+        private void DgvTable_KeyDown(object sender, KeyEventArgs e) => AssertTableReadiness(); //call AssertTableReadiness() whenever a key is first pressed
+        private void DgvTable_CellClick(object sender, DataGridViewCellEventArgs e) => AssertTableReadiness(); //call AssertTableReadiness() whenever a dgv cell is clicked
+        private void AssertTableReadiness() //sets tableIsReady = true and trigger DgvTable_SelectionChanged event
         {
             tableIsReady = true; DgvTable_SelectionChanged(dgvTable, EventArgs.Empty);
         }
-        private bool IsFilledOut()
+        private bool IsFilledOut() //returns false if any input fields are empty, otherwise returns true.
         {
             foreach (TextBox inputField in inputFields)
             {
@@ -278,12 +275,12 @@ namespace HyggeFinal
             return true;
         }
 
-        private void BtnClearSelection_Click(object sender, EventArgs e)
+        private void BtnClearSelection_Click(object sender, EventArgs e) //redraws the dgv table by 'changing' datasource to current table which clears the selection as a result.
         {
             ChangeDataSource(FindTable());
         }
 
-        private void DisplayErrorMessage(string message)
+        private void DisplayErrorMessage(string message) //displays a messagebox detailing the error that has occurred.
         {
             Console.WriteLine(message);
             MessageBox.Show(message, "Error", MessageBoxButtons.OK);
