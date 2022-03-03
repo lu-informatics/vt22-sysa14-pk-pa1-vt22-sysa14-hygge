@@ -8,7 +8,7 @@ namespace HyggeFinal
     public class DataAccessLayer
     { //TODO error handling
         public delegate void errorHandler(string message);
-        public static errorHandler onSqlError;
+        public static errorHandler onSqlError; //in order to receive error information about the DAL's SqlExceptions, any class must bind a fitting method to this delegate instance.
         public static string Test()
         { //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.   
             try
@@ -251,9 +251,9 @@ namespace HyggeFinal
                         message = "Error";
                         break;
                 }
-                onSqlError?.Invoke(message);
+                onSqlError?.Invoke(message); //if the onSqlError has any delegates, invoke it.
                 return null;
-            } // error handling here
+            }
         }
     }
 }
