@@ -129,7 +129,7 @@ namespace HyggeFinal
                     inputLabels[i].Text = ds.Tables[0].Columns[i].ToString(); //change names of labels to appropriate column names
                 }
             }
-            else DisplayErrorMessage("Error: No values for for input fields.");//nothing found via DisplayErrorMessage();
+            //else DisplayErrorMessage("Error: No values for for input fields.");//nothing found via DisplayErrorMessage();
         }
         private void SaveButton_Click(object sender, EventArgs e) //Update values for entry with a primary key matching that of inputFields[0]
         {
@@ -176,7 +176,7 @@ namespace HyggeFinal
 
         private void BtnCreate_Click(object sender, EventArgs e) //Create a new row with user input provided in inputFields
         {
-            if (FindTable().Equals(DataAccessLayer.Table.Person) && IsFilledOut()) //if the Person table is being viewed and all input fields are filled out.
+            if (FindTable().Equals(DataAccessLayer.Table.Person)) //if the Person table is being viewed and all input fields are filled out.
                     DataAccessLayer.Person.CreatePerson(
                         inputFields[0].Text,
                         inputFields[1].Text,
@@ -231,7 +231,7 @@ namespace HyggeFinal
         {
             try
             { //converts input string into either sql ready string with '' or into integer
-                if (str.All(char.IsDigit)) return long.Parse(str);
+                if (str.All(char.IsDigit)) return str;//long.Parse(str);
                 else return str;
             }
             catch (Exception) { return null; }//leaving input strings empty when trying to create new. error feedback is handled by delegate cast, so no need to handle it further here.

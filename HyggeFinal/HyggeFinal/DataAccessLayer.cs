@@ -233,7 +233,7 @@ namespace HyggeFinal
                         message = "An error has occured. Please make sure that lvlOfCommitment/age is an appropriate number.";
                         break;
                     case 547: //foreign key violation: no such foreign key
-                        message = "Error: Education, Industry, Interest and Relationship fields must use an existing entry. Add them first and try again.";
+                        message = "Error: Education, Industry, Interest and Relationship fields must use an existing entry.\n Altenatively, you're trying to change a value that is in use elsewhere.";
                         break;
                     case 2628: //string too long
                         message = "Error: Please make sure that all fields are appropriately sized.";
@@ -251,6 +251,7 @@ namespace HyggeFinal
                         message = "Error";
                         break;
                 }
+                Console.WriteLine(e.Message);
                 onSqlError?.Invoke(message); //if the onSqlError has any delegates, invoke it.
                 return null;
             }
