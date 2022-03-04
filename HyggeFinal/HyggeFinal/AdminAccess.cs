@@ -205,6 +205,7 @@ namespace HyggeFinal
                 case "Education": return DataAccessLayer.Table.Education;
                 case "Logins": return DataAccessLayer.Table.Logins;
                 case "EducationIndustry": return DataAccessLayer.Table.EducationIndustry;
+                case "PersonInterest": return DataAccessLayer.Table.PersonInterest;
                 default: return DataAccessLayer.Table.Error; //placeholder solution for non-nullable
             }
         }
