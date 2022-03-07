@@ -184,7 +184,9 @@ namespace HyggeFinal
                     using (SqlCommand command = new SqlCommand(sqlQuery, cnn)) // "using" keyword ensures disposal when objects are no longer used
                     using (SqlDataAdapter adapter = new SqlDataAdapter())
                     {
-                        if (args != null) { foreach (ParamArgs param in args) command.Parameters.AddWithValue(param.ParamID, param.Value); } // fill each parameter using ParamArgs
+                        if (args != null) { 
+                            foreach (ParamArgs param in args) command.Parameters.AddWithValue(param.ParamID, param.Value); 
+                        } // fill each parameter using ParamArgs
                         string queryType = sqlQuery.Substring(0, 6);                                        //The initial command is separated into a substring
                         List<string> wca = new List<string> { "UPDATE", "INSERT", "DELETE" };
                         if (wca.Contains(queryType))
@@ -217,7 +219,7 @@ namespace HyggeFinal
                 }
             }
             catch (SqlException e) {
-                string message = "";
+                string message;
                 switch (e.Number)
                 {
                     case -2: //connection timed out
