@@ -1,13 +1,12 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Data;
 using System.Collections.Generic;
 namespace HyggeFinal
 {
     public class DataAccessLayer
-    { //TODO error handling
+    {
         public delegate void errorHandler(string message);
-        //receive error information about the DAL's SqlExceptions, any class must bind a fitting method to this delegate instance.
+        //to receive error information about the DAL's SqlExceptions, a class must bind a fitting method to this delegate instance.
         public static errorHandler onSqlError;
         public enum Table
         { // Enumeration of valid Tables
@@ -21,12 +20,11 @@ namespace HyggeFinal
             PersonInterest,
             Error
         }
-
         public static class Utils
         {
             // These methods partially define the SQL query, leaving parameter fill for the SendToDatabes method.
             // IMPORTANT: These methods require that ParamIDs match their respective parameter names in the database.
-            public static void Create(Table table, params ParamArgs[] values) // this new create method should cover the creation of any object, including Person
+            public static void Create(Table table, params ParamArgs[] values)
             {
                 string paramNames = "";
                 string paramIDs = "";
@@ -37,32 +35,32 @@ namespace HyggeFinal
                 }
                 SendToDatabase($"INSERT INTO {table}({paramNames}) VALUES ({paramIDs})");
             }
-
+            
             public static void Update(Table table, ParamArgs changedValue, params ParamArgs[] keys)
-            {
-                //line below prevents duplicate declaration at pk modification without needing any pk_ prefix
+            { //line below prevents duplicate declaration at pk modification without needing any pk_ prefix
                 ParamArgs valuePA = new ParamArgs("@val_" + changedValue.ParamID.Substring(1), changedValue);
                 BuildQuery($"UPDATE {table} SET {valuePA.ParamID.Substring(5)} = {valuePA.ParamID}",keys); 
             }
-
+            
             public static DataSet Read(Table table, params ParamArgs[] keys) => BuildQuery($"SELECT * FROM {table}",keys);
+            
             public static void Delete(Table table, params ParamArgs[] keys) => BuildQuery($"DELETE {table}", keys);
-
+            
             public static DataSet BuildQuery(string queryStart, params ParamArgs[] keys)
-            {
+            {//BuildQuery creates any amount of 'equals' conditions to append to a query.
                 if (keys != null && keys.Length > 0) 
                     for (int i = 0; i < keys.Length; i++) queryStart += $"{(i > 0 ? " AND" : " WHERE")} {keys[i].ParamID.Substring(1)} = {keys[i].ParamID}";
                 return SendToDatabase(queryStart, keys);
             }
         }
-
         public static class Person
         {
             public static void CreatePerson(
                 string personID, string username, int age, string gender,
                 string email, string relationshipType, string industryName,
                 string educationName, string preference)
-                => Utils.Create(Table.Person, new ParamArgs("@personID", personID),
+                => Utils.Create(Table.Person, 
+                    new ParamArgs("@personID", personID),
                     new ParamArgs("@email", email),
                     new ParamArgs("@username", username),
                     new ParamArgs("@age", age),
@@ -72,7 +70,6 @@ namespace HyggeFinal
                     new ParamArgs("@gender", gender),
                     new ParamArgs("@preference", preference));
         }
-
         private static DataSet SendToDatabase(string sqlQuery, params ParamArgs[] args)
         {
             try
