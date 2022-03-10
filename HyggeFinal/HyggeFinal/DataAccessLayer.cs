@@ -2,22 +2,13 @@
 using System.Data.SqlClient;
 using System.Data;
 using System.Collections.Generic;
-
 namespace HyggeFinal
 {
     public class DataAccessLayer
     { //TODO error handling
         public delegate void errorHandler(string message);
-        public static errorHandler onSqlError; //in order to receive error information about the DAL's SqlExceptions, any class must bind a fitting method to this delegate instance.
-        public static string Test()
-        { //this method should only be used to test out new features of the db. it does not test the functionality of the whole class.   
-            try
-            {
-                DataSet ds = Login.ReadLogin("anabanana@hotmail.com");
-                return ds.Tables[0].Rows[0][0].ToString(); // returns the value of the first column of the first row in string format
-            }
-            catch (SqlException) { return ("failed to connect."); } // returns a simple error message if the client couldn't connect to the db server (check the data source!)
-        }
+        //receive error information about the DAL's SqlExceptions, any class must bind a fitting method to this delegate instance.
+        public static errorHandler onSqlError;
         public enum Table
         { // Enumeration of valid Tables
             Logins,
@@ -34,90 +25,35 @@ namespace HyggeFinal
         public static class Utils
         {
             // These methods partially define the SQL query, leaving parameter fill for the SendToDatabes method.
-            // IMPORTANT: These methods requires ParamIDs to match parameter names in the database.
+            // IMPORTANT: These methods require that ParamIDs match their respective parameter names in the database.
+            public static void Create(Table table, params ParamArgs[] values) // this new create method should cover the creation of any object, including Person
+            {
+                string paramNames = "";
+                string paramIDs = "";
+                for(int i = 0; i<values.Length;i++)
+                {
+                    paramNames  +=$"{(i<0?",":"")}{values[i].ParamID.Substring(1)}";
+                    paramIDs    +=$"{(i<0?",":"")}{values[i].ParamID}";
+                }
+                SendToDatabase($"INSERT INTO {table}({paramNames}) VALUES ({paramIDs})");
+            }
 
-            public static DataSet ViewAll(Table table) => SendToDatabase($"SELECT * FROM {table}");
+            public static void Update(Table table, ParamArgs changedValue, params ParamArgs[] keys)
+            {
+                //line below prevents duplicate declaration at pk modification without needing any pk_ prefix
+                ParamArgs valuePA = new ParamArgs("@val_" + changedValue.ParamID.Substring(1), changedValue);
+                BuildQuery($"UPDATE {table} SET {valuePA.ParamID.Substring(5)} = {valuePA.ParamID}",keys); 
+            }
 
-            public static void Create(Table table, ParamArgs value1, ParamArgs value2)//Generic SQL Create Method
-                => SendToDatabase($"INSERT INTO {table}({value1.ParamID.Substring(1)},{value2.ParamID.Substring(1)}) VALUES ({value1.ParamID},{value2.ParamID})", value1, value2);
-            public static void Update(Table table, ParamArgs primaryKey, ParamArgs changedValue)//Generic SQL Update Method
+            public static DataSet Read(Table table, params ParamArgs[] keys) => BuildQuery($"SELECT * FROM {table}",keys);
+            public static void Delete(Table table, params ParamArgs[] keys) => BuildQuery($"DELETE {table}", keys);
 
-                //The Primarykey paramID is preceeded by 'pk_' in order to permit primary key modification. Example: @pk_email
-                //if not, then @email would be declared twice in the SQL statement which throws an exception.
-                //This is why PK's paramID is substringed at index 4 instead of 1, as it needs to cut off more than just the '@'.
-                => SendToDatabase($"UPDATE {table} SET {changedValue.ParamID.Substring(1)} = {changedValue.ParamID} WHERE {primaryKey.ParamID.Substring(4)} = {primaryKey.ParamID}",
-                    changedValue,
-                    primaryKey);
-
-            public static void Update(Table table, ParamArgs primaryKey1, ParamArgs primaryKey2, ParamArgs changedValue)
-                //The Primarykey paramIDs are preceeded by 'pk_' in order to permit primary key modification. Example: @pk_email
-                => SendToDatabase(
-                    $"UPDATE {table} SET {changedValue.ParamID.Substring(1)} = {changedValue.ParamID} " +
-                    $"WHERE {primaryKey1.ParamID.Substring(4)} = {primaryKey1.ParamID} " +
-                    $"AND {primaryKey2.ParamID.Substring(4)} = {primaryKey2.ParamID}",
-                    changedValue,
-                    primaryKey1,
-                    primaryKey2);
-
-            public static DataSet Read(Table table, ParamArgs primaryKey)//Generic SQL Read method
-                => SendToDatabase($"SELECT * FROM {table} WHERE {primaryKey.ParamID.Substring(1)} = {primaryKey.ParamID}", primaryKey);
-
-            public static DataSet Read(Table table, ParamArgs primaryKey1,ParamArgs primaryKey2) //Many-to-many variant
-                => SendToDatabase(
-                    $"SELECT * FROM {table} " +
-                    $"WHERE {primaryKey1.ParamID.Substring(1)} = {primaryKey1.ParamID} " +
-                    $"AND {primaryKey2.ParamID.Substring(1)}={primaryKey2.ParamID}", 
-                    primaryKey1,
-                    primaryKey2);
-
-           
-            public static void Delete(Table table, ParamArgs primaryKey) //Generic SQL Delete Method
-                => SendToDatabase($"DELETE {table} WHERE {primaryKey.ParamID.Substring(1)} = {primaryKey.ParamID}", primaryKey);
-            public static void Delete(Table table, ParamArgs primaryKey1,ParamArgs primaryKey2) //Many-to-many variant
-                => SendToDatabase(
-                    $"DELETE {table} " +
-                    $"WHERE {primaryKey1.ParamID.Substring(1)} = {primaryKey1.ParamID} " +
-                    $"AND {primaryKey2.ParamID.Substring(1)} = {primaryKey2.ParamID}", 
-                    primaryKey1,
-                    primaryKey2);
-        }
-
-        public static class Login
-        {
-            //Create
-            public static void CreateLogin(string email, string password) => Utils.Create(Table.Logins, new ParamArgs("@email", email), new ParamArgs("@pword", password));
-            //Update
-            public static void UpdateLogin(string email, string newPassword) => Utils.Update(Table.Logins, new ParamArgs("@pk_email", email), new ParamArgs("@pword", newPassword));
-            //Read
-            public static DataSet ReadLogin(string email) => Utils.Read(Table.Logins, new ParamArgs("@email", email));
-            //Delete
-            public static void DeleteLogin(string email) => Utils.Delete(Table.Logins, new ParamArgs("@email", email));
-        }
-
-        public static class Industry
-        {
-            //Create
-            public static void CreateIndustry(string industryName, string field) => Utils.Create(Table.Industry, new ParamArgs("@industryName", industryName), new ParamArgs("@field", field));
-            //Update 
-            public static void UpdateIndustry(string industryName, string newfield) => Utils.Update(Table.Industry, new ParamArgs("@pk_industryName", industryName), new ParamArgs("@field", newfield));
-            //Read
-            public static DataSet ReadIndustry(string industryName) => Utils.Read(Table.Industry, new ParamArgs("@industryName", industryName));
-            //Delete
-            public static void DeleteIndustry(string industryName) => Utils.Delete(Table.Industry, new ParamArgs("@industryName", industryName));
-        }
-
-        public static class Education
-        {
-            //Create
-            public static void CreateEducation(string educationName, string locale)
-                => Utils.Create(Table.Education, new ParamArgs("@educationName", educationName), new ParamArgs("@locale", locale));
-            //Update
-            public static void UpdateEducation(string educationName, string newLocale)
-                => Utils.Update(Table.Education, new ParamArgs("@pk_educationName", educationName), new ParamArgs("@locale", newLocale));
-            //Read
-            public static DataSet ReadEducation(string educationName) => Utils.Read(Table.Education, new ParamArgs("@educationName", educationName));
-            //Delete
-            public static void DeleteEducation(string educationName) => Utils.Delete(Table.Education, new ParamArgs("@educationName", educationName));
+            public static DataSet BuildQuery(string queryStart, params ParamArgs[] keys)
+            {
+                if (keys != null && keys.Length > 0) 
+                    for (int i = 0; i < keys.Length; i++) queryStart += $"{(i > 0 ? " AND" : " WHERE")} {keys[i].ParamID.Substring(1)} = {keys[i].ParamID}";
+                return SendToDatabase(queryStart, keys);
+            }
         }
 
         public static class Person
@@ -126,10 +62,7 @@ namespace HyggeFinal
                 string personID, string username, int age, string gender,
                 string email, string relationshipType, string industryName,
                 string educationName, string preference)
-                => SendToDatabase(
-                    "INSERT INTO Person(personID,username,age,gender,preference,email,relationshipType,educationName,industryName) " +
-                    "VALUES (@personID,@username,@age,@gender,@preference,@email,@relationshipType,@educationName,@industryName)",
-                    new ParamArgs("@personID", personID),
+                => Utils.Create(Table.Person, new ParamArgs("@personID", personID),
                     new ParamArgs("@email", email),
                     new ParamArgs("@username", username),
                     new ParamArgs("@age", age),
@@ -138,40 +71,6 @@ namespace HyggeFinal
                     new ParamArgs("@relationshipType", relationshipType),
                     new ParamArgs("@gender", gender),
                     new ParamArgs("@preference", preference));
-            //Update
-            public static void UpdatePerson(string personID, ParamArgs changedValue) => Utils.Update(Table.Person, new ParamArgs("@pk_personID", personID), changedValue);
-            //Read
-            public static DataSet ReadPerson(string personID) => Utils.Read(Table.Person, new ParamArgs("@personID", personID));
-            //Delete
-            public static void DeletePerson(string personID) => Utils.Delete(Table.Person, new ParamArgs("@personID", personID));
-        }
-
-        public static class Relationship
-        {
-            //Create
-            public static void CreateRelationship(string relationshipType, int lvlOfCommitment)
-                => Utils.Create(Table.Relationship, new ParamArgs("@relationshipType", relationshipType), new ParamArgs("@lvlOfCommitment", lvlOfCommitment));
-            //Update
-            public static void UpdateRelationship(string relationshipType, int newLvlOfCommitment)
-                => Utils.Update(Table.Relationship, new ParamArgs("@pk_relationshipType", relationshipType), new ParamArgs("@lvlOfCommitment", newLvlOfCommitment));
-            //Read
-            public static DataSet ReadRelationship(string relationshipType) => Utils.Read(Table.Relationship, new ParamArgs("@relationshipType", relationshipType));
-            //Delete
-            public static void DeleteRelationship(string relationshipType) => Utils.Delete(Table.Relationship, new ParamArgs("@relationshipType", relationshipType));
-        }
-
-        public static class Interest
-        {
-            //Create
-            public static void CreateInterest(string category, string group)
-                => Utils.Create(Table.Interest, new ParamArgs("@interestCategory", category), new ParamArgs("@interestGroup", group));
-            //Update
-            public static void UpdateInterest(string interestCategory, string newGroup)
-                => Utils.Update(Table.Interest, new ParamArgs("@pk_interestCategory", interestCategory), new ParamArgs("@interestGroup", newGroup));
-            //Read
-            public static DataSet ReadInterest(string interestCategory) => Utils.Read(Table.Interest, new ParamArgs("@interestCategory", interestCategory));
-            //Delete
-            public static void DeleteInterest(string interestCategory) => Utils.Delete(Table.Interest, new ParamArgs("@interestCategory", interestCategory));
         }
 
         private static DataSet SendToDatabase(string sqlQuery, params ParamArgs[] args)
@@ -217,7 +116,7 @@ namespace HyggeFinal
                 }
             }
             catch (SqlException e) {
-                string message = "";
+                string message;
                 switch (e.Number)
                 {
                     case -2: //connection timed out

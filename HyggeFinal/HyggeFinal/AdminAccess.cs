@@ -42,7 +42,7 @@ namespace HyggeFinal
         private void UpdateDataSource(DataAccessLayer.Table chosenTable) //updates the currently viewed dgv table. This is called after changes are made to an entry.
         {
             tableIsReady = false; //tableIsReady is set to false to prevent premature trigger of selectionChanged-event. It is set to true in cellclick- and keydown-events below 
-            DataSet ds = DataAccessLayer.Utils.ViewAll(chosenTable);// a DAL method is called and returns a DataSet
+            DataSet ds = DataAccessLayer.Utils.Read(chosenTable);// a DAL method is called and returns a DataSet
             if (ds != null)
             { //if a DataSet was returned...
                 dgvTable.DataSource = ds.Tables[0]; //... change the datasource for DataGridView to the fetched DataSet
@@ -140,9 +140,10 @@ namespace HyggeFinal
                     if (inputFields[i].Enabled)
                     {
                         DataAccessLayer.Utils.Update(FindTable(), //update the value of each column if both primary key cells match
+                            new ParamArgs($"@{inputLabels[i].Text}", TrueDataType(inputFields[i].Text)),
                             new ParamArgs($"@pk_{dgvTable.Columns[0].Name}", TrueDataType(dgvTable.SelectedRows[0].Cells[0].Value.ToString())),
-                            new ParamArgs($"@pk_{dgvTable.Columns[1].Name }", TrueDataType(dgvTable.SelectedRows[0].Cells[1].Value.ToString())),
-                            new ParamArgs($"@{inputLabels[i].Text}", TrueDataType(inputFields[i].Text)));
+                            new ParamArgs($"@pk_{dgvTable.Columns[1].Name }", TrueDataType(dgvTable.SelectedRows[0].Cells[1].Value.ToString()))
+                            );
                     }
                 }
                 string primaryKey1 = inputFields[0].Text;
@@ -158,8 +159,9 @@ namespace HyggeFinal
                         try
                         {
                             DataAccessLayer.Utils.Update(FindTable(), //calls on DAL method to update entry in SQL database
-                                new ParamArgs($"@pk_{dgvTable.Columns[0].Name}", TrueDataType(dgvTable.SelectedRows[0].Cells[0].Value.ToString())),
-                                new ParamArgs($"@{inputLabels[i].Text}", TrueDataType(inputFields[i].Text)));
+                                new ParamArgs($"@{inputLabels[i].Text}", TrueDataType(inputFields[i].Text)),
+                                new ParamArgs($"@pk_{dgvTable.Columns[0].Name}", TrueDataType(dgvTable.SelectedRows[0].Cells[0].Value.ToString()))
+                                );
                         }
                         catch (Exception)
                         {

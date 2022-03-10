@@ -19,7 +19,6 @@ namespace HyggeFinal
 
         private void Login_Load(object sender, EventArgs e)
         {
-            lblmsg.Text = DataAccessLayer.Test();
         }
     }
 }
